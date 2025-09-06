@@ -171,7 +171,7 @@ def draw_minimap():
         glVertex2f(MINIMAP_OFFSET_X, y)
         glVertex2f(MINIMAP_OFFSET_X + MINIMAP_SIZE, y)
         glEnd()
-    def draw_grid():
+def draw_grid():
     # Chess board er moto grid - green shades use korlam
     for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
@@ -194,7 +194,7 @@ def draw_minimap():
             glEnd()
 
             glPopMatrix()
-    def update_atmosphere():
+def update_atmosphere():
     # Score onujayi background color change - progression feel dite
     global current_atmosphere
 
@@ -229,5 +229,84 @@ def normalize_position(x, y):
     # Borderless mode e wall cross korle opposite side e chole jabe
     if game_mode == "BORDERLESS":
         return x % GRID_SIZE, y % GRID_SIZE
-    return x, y                  
+    return x, y 
+def idle():
+    # Main game loop - constantly running
+    global last_move_time
+
+    current_time = time.time()
+
+    # Snake movement timing
+    if game_state == "PLAYING" and current_time - last_move_time >= snake_speed:
+        move_snake()
+        last_move_time = current_time
+
+    # Quick play timer check
+    if game_mode == "QUICK_PLAY":
+        check_quick_play_timer()
+
+    # Update power-up effects
+    update_special_effects()
+
+    # Food generation check
+    if game_state == "PLAYING":
+        if not food_position:
+            generate_food()
+
+    glutPostRedisplay()  # Screen refresh
+
+def showScreen():
+    # Main rendering function - sob draw kore ekhane
+    glClear(GL_COLOR_BUFFER_BIT)
+    glLoadIdentity()
+    glViewport(0, 0, 1000, 800)
+
+    if game_state == "START_MENU":
+        draw_start_menu()
+    elif game_state in ["PLAYING", "PAUSED", "GAME_OVER"]:
+        setupCamera()
+        draw_shapes()
+        draw_hud()
+        draw_minimap()
+
+        if game_state == "PLAYING":
+            if game_mode != "QUICK_PLAY":
+                draw_button("pause", buttons["pause"])
+        elif game_state == "PAUSED":
+            draw_paused_screen()
+        elif game_state == "GAME_OVER":
+            draw_game_over_screen()
+
+    glutSwapBuffers()
+
+def main():
+    # Initialize everything - OpenGL setup
+    glutInit()
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
+    glutInitWindowSize(1000, 800)
+    glutInitWindowPosition(200, 0)
+    glutCreateWindow(b"3D Snake Game - Banglish Edition")
+
+    # Callback functions register
+    glutDisplayFunc(showScreen)
+    glutKeyboardFunc(keyboardListener)
+    glutSpecialFunc(specialKeyListener)
+    glutMouseFunc(mouseListener)
+    glutIdleFunc(idle)
+
+    # OpenGL settings
+    glClearColor(*atmosphere_colors[current_atmosphere])
+    glShadeModel(GL_SMOOTH)
+
+    # Initial game setup
+    generate_food()
+    set_snake_speed()
+
+    # Start the main loop - eita infinite loop
+    glutMainLoop()
+
+# Program start - ekhane shuru
+if __name__ == "__main__":
+    main()    
+
             
