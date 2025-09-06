@@ -1,5 +1,6 @@
 # CSE423-Project
 <h3>Main feature of the Project:</h3>
+
 1. Different Color of Snakes skin: Will able to select Snake Skin color
 
 2. Difficulty option: Normal, Hard, Punisher.
