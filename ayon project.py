@@ -1,3 +1,35 @@
+
+def convert_world_coords(grid_x, grid_y):
+    # Grid position ke 3D world position e convert
+    world_x = grid_x * CELL_SIZE - GRID_OFFSET + HALF_CELL
+    world_y = grid_y * CELL_SIZE - GRID_OFFSET + HALF_CELL
+    return world_x, world_y
+
+def get_valid_positions(exclude_positions=None):
+    # Snake ar obstacles chara jekhanei food spawn korte parbo
+    if exclude_positions is None:
+        exclude_positions = []
+
+    valid_positions = []
+    for x in range(GRID_SIZE):
+        for y in range(GRID_SIZE):
+            pos = (x, y)
+            if pos not in snake_positions and pos not in exclude_positions:
+                if pos not in obstacles and pos not in bombs:
+                    valid_positions.append(pos)
+    return valid_positions
+
+def draw_shapes():
+    # All 3D objects draw kore ekhane
+    draw_grid()
+    draw_obstacles()
+    draw_bombs()
+    draw_food()
+    draw_special_food()
+
+    # First person mode e snake dekhabo na - obvious reason
+    if not is_first_person:
+        draw_snake()
 def setupCamera():
     # Camera setup - perspective ar position
     glMatrixMode(GL_PROJECTION)
@@ -310,3 +342,4 @@ if __name__ == "__main__":
     main()    
 
             
+
