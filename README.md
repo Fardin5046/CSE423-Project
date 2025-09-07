@@ -28,7 +28,7 @@
 13. Game modes: survival, quick-play, Borderless mode
  
 14. Start Menu: Play game, choose difficulty, game mode, change snake skin color
- 
+
 15. Minimap on first person mode
  
 
